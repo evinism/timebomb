@@ -1,0 +1,15 @@
+{
+  "name": "timebomb-js",
+  "version": "0.0.1",
+  "description": "Fail procedures after a certain time",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Evin Sellin",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.1.2"
+  }
+}
