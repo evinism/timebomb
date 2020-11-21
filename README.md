@@ -25,7 +25,7 @@ This comes in 3 varieties, in increasing aggressiveness:
 Timebomb provides the ability to throw a warning after a certain date:
 
 ```ts
-import timebomb from 'timebomb';
+import timebomb from 'timebomb-js';
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
@@ -39,7 +39,7 @@ function foo(bar) {
 Timebomb provides the ability to add arbitrary latency after a certain date:
 
 ```ts
-import timebomb from 'timebomb';
+import timebomb from 'timebomb-js';
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
@@ -54,7 +54,7 @@ a refactored implementation.
 If you need to force other people to move away from a deprecated method progressively, perhaps if you've got a deprecated endpoint or sdk method, you can specify a progressive latency increase. This will ensure that important requests get migrated first, followed by less important ones:
 
 ```ts
-import timebomb from 'timebomb';
+import timebomb from 'timebomb-js';
 
 function deprecatedFoo(bar) {
   // Don't use this method after 2021-10-30, as it's being deprecated
@@ -70,7 +70,7 @@ This will provide a warning for a week before failing, and slow the implementati
 If nothing else works, the most extreme option is to outright fail the request.
 
 ```ts
-import timebomb from 'timebomb';
+import timebomb from 'timebomb-js';
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
