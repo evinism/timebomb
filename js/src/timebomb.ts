@@ -1,5 +1,7 @@
 interface Config {
   warningPeriodInDays: number;
+  warnFunction: (msg: string) => unknown;
+  failFunction: (msg: string) => unknown;
 }
 
 function wait(ms: number) {
@@ -13,19 +15,27 @@ function wait(ms: number) {
 export class TimebombError extends Error {}
 
 export function getConfig(options: Partial<Config>): Config {
-  const { warningPeriodInDays = 7 } = options;
+  const {
+    warningPeriodInDays = 7,
+    warnFunction = (msg: string) => console.warn(msg),
+    failFunction = (msg: string) => {
+      throw new TimebombError(msg);
+    },
+  } = options;
   return {
     warningPeriodInDays,
+    warnFunction,
+    failFunction,
   };
 }
 
 export function failAfter(time: Date, options: Partial<Config> = {}) {
-  const { warningPeriodInDays } = getConfig(options);
-  const diff = time.getTime() - Date.now();
-  if (diff < 0) {
-    throw new TimebombError(`Timebomb detonated after ${time.toUTCString()}`);
-  } else if (diff > warningPeriodInDays * 60 * 60 * 24) {
-    console.warn(
+  const config = getConfig(options);
+  const diff = Date.now() - time.getTime();
+  if (diff > 0) {
+    config.failFunction(`Timebomb detonated after ${time.toUTCString()}`);
+  } else if (diff > -config.warningPeriodInDays * 24 * 60 * 60 * 1000) {
+    config.warnFunction(
       `Warning: Timebomb will soon detonate at ${time.toUTCString()}`
     );
   }
@@ -36,16 +46,17 @@ export function slowAfter(
   delay: number | ((daysAfter: number) => number),
   options: Partial<Config> = {}
 ) {
-  const { warningPeriodInDays } = getConfig(options);
-  const diff = time.getTime() - Date.now();
-  const ms = typeof delay === "number" ? delay : delay(diff / (60 * 60 * 24));
-  if (diff < 0) {
-    console.warn(
+  const config = getConfig(options);
+  const diff = Date.now() - time.getTime();
+  const ms =
+    typeof delay === "number" ? delay : delay(diff / (60 * 60 * 24 * 1000));
+  if (diff > 0) {
+    config.warnFunction(
       `Error: Timebomb has detonated at ${time.toUTCString()}, slowing request by ${ms}ms`
     );
     wait(ms);
-  } else if (diff > warningPeriodInDays * 60 * 60 * 24) {
-    console.warn(
+  } else if (diff > -config.warningPeriodInDays * 24 * 60 * 60 * 1000) {
+    config.warnFunction(
       `Warning: Timebomb will soon start slowing request at ${time.toUTCString()}`
     );
   }
