@@ -22,14 +22,14 @@ This comes in 3 varieties, in increasing aggressiveness:
 
 ### warnAfter
 
-Timebomb provides the ability to throw a warning if a certain time has expired:
+Timebomb provides the ability to throw a warning after a certain date:
 
 ```ts
 import timebomb;
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.warnAfter(Date("2021-10-30"), 100);
+  timebomb.warnAfter(new Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
@@ -43,7 +43,7 @@ import timebomb;
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.slowAfter(Date("2021-10-30"), 100);
+  timebomb.slowAfter(new Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
@@ -58,14 +58,14 @@ import timebomb;
 
 function deprecatedFoo(bar) {
   // Don't use this method after 2021-10-30, as it's being deprecated
-  timebomb.slowAfter(Date("2021-10-30"), (daysLate) => 100 * daysLate);
+  timebomb.slowAfter(new Date("2021-10-30"), (daysLate) => 100 * daysLate);
   bar.doSomethingWrong();
 }
 ```
 
 This will provide a warning for a week before failing, and slow the implementation afterwards.
 
-## That's frighteningly aggressive. Why would I risk downtime with such a thing?
+### failAfter
 
 If nothing else works, the most extreme option is to outright fail the request.
 
