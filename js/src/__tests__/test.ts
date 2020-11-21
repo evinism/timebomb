@@ -1,5 +1,24 @@
-import { failAfter, slowAfter } from "../timebomb";
+/// <reference path="./types/chai.d.ts" />
+import { warnAfter, failAfter, slowAfter } from "../timebomb";
 import { assert } from "chai";
+
+describe("warnAfter function", () => {
+  it("doesn't warn if unexpired", () => {
+    let warning: string | undefined;
+    const warnFunction = (msg: string) => (warning = msg);
+    warnAfter(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), {
+      warnFunction,
+    });
+    assert.isUndefined(warning);
+  });
+
+  it("warns if expired", () => {
+    let warning: string | undefined;
+    const warnFunction = (msg: string) => (warning = msg);
+    warnAfter(new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), { warnFunction });
+    assert.isString(warning);
+  });
+});
 
 describe("failAfter function", () => {
   it("doesn't warn outside the warning period", () => {
@@ -49,18 +68,23 @@ describe("slowAfter function", () => {
   });
 
   it("delays by a certain amount if expired", () => {
+    const warnFunction = () => {};
     const timeStart = Date.now();
-    slowAfter(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), 20);
+    slowAfter(new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), 20, {
+      warnFunction,
+    });
     const timeDelay = Date.now() - timeStart;
     assert.isAtLeast(timeDelay, 15);
     assert.isAtMost(timeDelay, 25);
   });
 
   it("delays by a lambda based on days", () => {
+    const warnFunction = () => {};
     const timeStart = Date.now();
     slowAfter(
       new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-      (days) => days * 10
+      (days) => days * 10,
+      { warnFunction }
     );
     const timeDelay = Date.now() - timeStart;
     assert.isAtLeast(timeDelay, 35);

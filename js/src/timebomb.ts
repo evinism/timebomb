@@ -29,14 +29,22 @@ export function getConfig(options: Partial<Config>): Config {
   };
 }
 
+export function warnAfter(time: Date, options: Partial<Config> = {}) {
+  const config = getConfig(options);
+  const diff = Date.now() - time.getTime();
+  if (diff > 0) {
+    config.warnFunction(`Timebomb expired after ${time.toUTCString()}`);
+  }
+}
+
 export function failAfter(time: Date, options: Partial<Config> = {}) {
   const config = getConfig(options);
   const diff = Date.now() - time.getTime();
   if (diff > 0) {
-    config.failFunction(`Timebomb detonated after ${time.toUTCString()}`);
+    config.failFunction(`Timebomb expired after ${time.toUTCString()}`);
   } else if (diff > -config.warningPeriodInDays * 24 * 60 * 60 * 1000) {
     config.warnFunction(
-      `Warning: Timebomb will soon detonate at ${time.toUTCString()}`
+      `Warning: Timebomb will soon expired at ${time.toUTCString()}`
     );
   }
 }
@@ -52,7 +60,7 @@ export function slowAfter(
     typeof delay === "number" ? delay : delay(diff / (60 * 60 * 24 * 1000));
   if (diff > 0) {
     config.warnFunction(
-      `Error: Timebomb has detonated at ${time.toUTCString()}, slowing request by ${ms}ms`
+      `Error: Timebomb has expired at ${time.toUTCString()}, slowing request by ${ms}ms`
     );
     wait(ms);
   } else if (diff > -config.warningPeriodInDays * 24 * 60 * 60 * 1000) {

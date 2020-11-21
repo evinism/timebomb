@@ -4,7 +4,9 @@
     "target": "ES5",
     "declaration": true,
     "strict": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "typeRoots": ["node_modules/@types", "src/__tests_/types"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/**/__types__"]
 }

@@ -2,11 +2,7 @@
 
 Timebomb is a simple library for failing loudly after a certain amount of time has passed.
 
-Available to JS, but coming soon to a language near you!
-
-## Installation
-
-`npm install --save timebomb-js`
+JS installation via `npm install --save timebomb-js`
 
 ## The Problem
 
@@ -14,27 +10,33 @@ Migrations leave TODOs all over the place. After a migration is completed, these
 for weeks, months, and years. If only there was a way to make absolutely sure that you revisited
 them before a certain date...
 
-## The solutions
+## The solution
 
 Fail loudly and violently if the date passes.
+
+This comes in 3 varieties, in increasing aggressiveness:
+
+1. `warnAfter`
+2. `slowAfter`
+3. `failAfter`
+
+### warnAfter
+
+Timebomb provides the ability to throw a warning if a certain time has expired:
 
 ```ts
 import timebomb;
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.failAfter(Date("2021-10-30"));
+  timebomb.warnAfter(Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
 
-This will provide a warning for a week before failing, and throw an error afterwards.
+### slowAfter
 
-## That's frighteningly aggressive. Why would I risk downtime with such a thing?
-
-Maybe you wouldn't in things like synchronous service requests, but you might in something like background jobs, where failures lead to less catastrophic outcomes.
-
-For business-critical events where throwing an error isn't an option, there's also the ability to add arbitrary latency after a certain date:
+Timebomb provides the ability to add arbitrary latency after a certain date:
 
 ```ts
 import timebomb;
@@ -54,9 +56,27 @@ If you need to force other people to move away from a deprecated method progress
 ```ts
 import timebomb;
 
+function deprecatedFoo(bar) {
+  // Don't use this method after 2021-10-30, as it's being deprecated
+  timebomb.slowAfter(Date("2021-10-30"), (daysLate) => 100 * daysLate);
+  bar.doSomethingWrong();
+}
+```
+
+This will provide a warning for a week before failing, and slow the implementation afterwards.
+
+## That's frighteningly aggressive. Why would I risk downtime with such a thing?
+
+If nothing else works, the most extreme option is to outright fail the request.
+
+```ts
+import timebomb;
+
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.slowAfter(Date("2021-10-30"), (daysLate) => 100 * daysLate);
+  timebomb.failAfter(Date("2021-10-30"));
   bar.hack();
 }
 ```
+
+This will provide a warning for a week before failing, and throw an error afterwards.

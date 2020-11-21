@@ -1,4 +1,4 @@
-import { failAfter, slowAfter } from "./timebomb";
+import { failAfter, slowAfter, warnAfter } from "./timebomb";
 
-export { failAfter, slowAfter };
-export default { failAfter, slowAfter };
+export { failAfter, slowAfter, warnAfter };
+export default { failAfter, slowAfter, warnAfter };
