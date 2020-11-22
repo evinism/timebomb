@@ -29,7 +29,7 @@ import timebomb from 'timebomb-js';
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.warnAfter(new Date("2021-10-30"), 100);
+  timebomb.warnAfter(new Date("2021-10-30"));
   bar.hack();
 }
 ```
