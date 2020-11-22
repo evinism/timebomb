@@ -1,0 +1,12 @@
+[[source]]
+url = "https://pypi.org/simple"
+name = "pypi"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+black = "*"
+timebomb = {editable = true, path = "."}
+
+[pipenv]
+allow_prereleases = true
