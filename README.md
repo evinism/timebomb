@@ -32,11 +32,11 @@ Use the `slowAfter` function if you can as this keeps system load low (just awai
 Timebomb provides the ability to throw a warning after a certain date:
 
 ```ts
-import timebomb from 'timebomb-js';
+import timebomb from "timebomb-js";
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.warnAfter(new Date('2021-10-30'));
+  timebomb.warnAfter(new Date("2021-10-30"));
   bar.hack();
 }
 ```
@@ -46,11 +46,11 @@ function foo(bar) {
 Timebomb provides the ability to add arbitrary latency after a certain date:
 
 ```ts
-import timebomb from 'timebomb-js';
+import timebomb from "timebomb-js";
 
 async function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  await timebomb.slowAfter(new Date('2021-10-30'), 100);
+  await timebomb.slowAfter(new Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
@@ -59,11 +59,11 @@ async function foo(bar) {
 // This is the synchronous version (it uses a while loop which puts high load on the system).
 // Use the promise based version from above if you can.
 
-import timebomb from 'timebomb-js';
+import timebomb from "timebomb-js";
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.slowAfterSync(new Date('2021-10-30'), 100);
+  timebomb.slowAfterSync(new Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
@@ -74,12 +74,12 @@ a refactored implementation.
 If you need to force other people to move away from a deprecated method progressively, perhaps if you've got a deprecated endpoint or sdk method, you can specify a progressive latency increase. This will ensure that important requests get migrated first, followed by less important ones:
 
 ```ts
-import timebomb from 'timebomb-js';
+import timebomb from "timebomb-js";
 
 async function deprecatedFoo(bar) {
   // Don't use this method after 2021-10-30, as it's being deprecated
   await timebomb.slowAfter(
-    new Date('2021-10-30'),
+    new Date("2021-10-30"),
     (daysLate) => 100 * daysLate
   );
   bar.doSomethingWrong();
@@ -93,11 +93,11 @@ This will provide a warning for a week before failing, and slow the implementati
 If nothing else works, the most extreme option is to outright fail the request.
 
 ```ts
-import timebomb from 'timebomb-js';
+import timebomb from "timebomb-js";
 
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.failAfter(Date('2021-10-30'));
+  timebomb.failAfter(Date("2021-10-30"));
   bar.hack();
 }
 ```
