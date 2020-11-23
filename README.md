@@ -1,9 +1,9 @@
 # Timebomb
 
-Timebomb is a tiny cross-language library for failing loudly after a certain date or time has passed. 
+Timebomb is a tiny cross-language library for failing loudly after a certain date or time has passed.
 
-* JS installation via `npm install --save timebomb-js`
-* Python installation via `pip install timebomb`
+- JS installation via `npm install --save timebomb-js`
+- Python installation via `pip install timebomb`
 
 ## The Problem
 
@@ -17,9 +17,15 @@ Fail loudly and violently if the date passes.
 
 This comes in 3 varieties, in increasing aggressiveness:
 
-1. `warnAfter`
-2. `slowAfter`
-3. `failAfter`
+1. `warnAfter` / `warnAfterSync`
+2. `slowAfter` / `slowAfterSync`
+3. `failAfter` / `failAfterSync`
+
+For `warnAfter` and `failAfter` the sync and async version do exactly the same with the only
+difference that the async version returns a promise instead of undefined.
+
+The `slowAfterSync` function uses a while loop internally to sleep for a given duration.
+Use the `slowAfter` function if you can as this keeps system load low (just await the promise).
 
 ### warnAfter
 
@@ -42,9 +48,22 @@ Timebomb provides the ability to add arbitrary latency after a certain date:
 ```ts
 import timebomb from "timebomb-js";
 
+async function foo(bar) {
+  // Temporary workaround: bar.hack() is required because of x/y/z reasons
+  await timebomb.slowAfter(new Date("2021-10-30"), 100);
+  bar.hack();
+}
+```
+
+```ts
+// This is the synchronous version (it uses a while loop which puts high load on the system).
+// Use the promise based version from above if you can.
+
+import timebomb from "timebomb-js";
+
 function foo(bar) {
   // Temporary workaround: bar.hack() is required because of x/y/z reasons
-  timebomb.slowAfter(new Date("2021-10-30"), 100);
+  timebomb.slowAfterSync(new Date("2021-10-30"), 100);
   bar.hack();
 }
 ```
@@ -57,9 +76,12 @@ If you need to force other people to move away from a deprecated method progress
 ```ts
 import timebomb from "timebomb-js";
 
-function deprecatedFoo(bar) {
+async function deprecatedFoo(bar) {
   // Don't use this method after 2021-10-30, as it's being deprecated
-  timebomb.slowAfter(new Date("2021-10-30"), (daysLate) => 100 * daysLate);
+  await timebomb.slowAfter(
+    new Date("2021-10-30"),
+    (daysLate) => 100 * daysLate
+  );
   bar.doSomethingWrong();
 }
 ```
