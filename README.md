@@ -1,9 +1,9 @@
 # Timebomb
 
-Timebomb is a simple library for failing loudly after a certain amount of time has passed.
+Timebomb is a tiny cross-language library for failing loudly after a certain date or time has passed. 
 
-JS installation via `npm install --save timebomb-js`
-Python installation via `pip install timebomb`
+* JS installation via `npm install --save timebomb-js`
+* Python installation via `pip install timebomb`
 
 ## The Problem
 
