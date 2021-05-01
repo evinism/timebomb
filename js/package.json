@@ -1,6 +1,6 @@
 {
   "name": "timebomb-js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Fail procedures after a certain time",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
