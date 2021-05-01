@@ -81,3 +81,50 @@ function foo(bar) {
 ```
 
 This will provide a warning for a week before failing, and throw an error afterwards.
+
+## `timebomb-js` Specifics
+
+This section deals with the specifics of `timebomb-js` in Javascript
+
+### Disabling warnings / errors / slowdown in production
+
+You can automatically disable the effects of timebomb in production by importing from `timebomb/nonprod` instead.
+
+```ts
+import { warnAfter, slowAfter, failAfter } from "timebomb-js/nonprod";
+
+// Will be disabled if this code runs in production
+warnAfter([...])
+```
+
+### Configuration
+
+Each of the functions takes an additional optional argument, called options.
+
+```ts
+warnAfter(new Date("2021-10-30"), options);
+slowAfter(new Date("2021-10-30"), 200, options);
+failAfter(new Date("2021-10-30"), options);
+```
+
+Options is an object with the following keys:
+
+| Key                 | type              | default | description                                    |
+| ------------------- | ----------------- | ------- | ---------------------------------------------- |
+| warningPeriodInDays | `number`          | 7       | How many days before expiry to warn the user   |
+| warnFunction        | `(string) => any` | builtin | What function gets called when timebomb warns? |
+| failFunction        | `(string) => any` | builtin | What function gets called when timebomb fails? |
+| shouldDisableInProd | `boolean`         | false   | Whether to disable timebomb's effects in prod  |
+| prodDetectFunction  | `() => boolean`   | builtin | How timebomb detects whether env is prod.      |
+
+### Changing configuration globally
+
+If you want to change the behavior of timebomb globally, you can use the `updateConfig()` function provided by timebomb to update the default config.
+
+```ts
+import { updateDefaultConfig } from "timebomb-js";
+
+updateDefaultConfig({
+  warnFunction: (str: string) => reportToBackend(str) && console.warn(str),
+});
+```
